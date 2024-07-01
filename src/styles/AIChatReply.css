@@ -1,0 +1,250 @@
+.sparkles-icon {
+    @apply
+      text-white
+      rounded-full
+      cursor-pointer
+      z-50;
+  }
+  
+  .sparkles-icon {
+    @apply
+      bg-white
+      rounded-full
+      w-icon
+      h-icon
+      flex
+      items-center
+      justify-center;
+  }
+  
+  input[type="text"].prompt-input {
+    @apply
+      p-4
+      text-2xl
+      font-medium
+      text-gray-500
+      border
+      border-gray-200
+      mt-6
+      active:bg-white
+      focus:outline-gray-400
+      hover:border
+      hover:border-gray-200
+      shadow-custom-inset
+      hover:shadow-custom-inset
+      active:shadow-custom-inset
+      focus:shadow-custom-inset
+      h-16;
+  }
+  
+  #plasmo-chat-icon {
+    @apply
+      lg:bottom-5
+      right-5
+      bottom-2
+      absolute
+  }
+  
+  .modal{
+    @apply
+      relative z-10;
+  }
+  
+  .modal-backdrop {
+    @apply
+      fixed
+      inset-0
+      bg-gray-500
+      bg-opacity-75
+      transition-opacity;
+  }
+  
+  .modal-container {
+    @apply
+      fixed
+      inset-0
+      z-10
+      flex
+      items-center
+      justify-center;
+  }
+  
+  .modal-panel {
+    @apply
+      relative
+      transform
+      overflow-hidden
+      rounded-lg
+      bg-white
+      text-left
+      shadow-xl
+      transition-all
+      sm:my-8
+      lg:w-modal-width
+      w-11/12;
+  }
+  
+  .modal-body {
+    @apply
+      bg-white
+      px-4
+      pb-2
+      pt-5
+      sm:p-6
+      sm:pb-4;
+  }
+  
+  .messages-wrapper {
+    @apply
+      overflow-y-auto
+      max-h-80;
+  }
+  
+  .promt-message-wrapper {
+    @apply
+      flex
+      justify-end
+      mb-4
+      p-4
+      text-2xl;
+  }
+  
+  .prompt-message {
+    @apply
+      bg-gray-100
+      text-gray-500
+      p-2.5
+      rounded-lg
+      max-w-md
+      break-all;
+  }
+  
+  .response-message-wrapper {
+    @apply
+      flex
+      mb-2;
+  }
+  
+  .response-message {
+    @apply
+      bg-blue-100
+      p-2.5
+      rounded-lg
+      max-w-md
+      text-2xl
+      text-gray-500;
+  }
+  
+  .buttons-wrapper {
+    @apply
+      flex
+      justify-end
+      p-5
+      gap-4 ;
+  }
+  
+  .generate-button {
+    @apply
+      inline-flex
+      w-full
+      justify-center
+      items-center
+      gap-2.5
+      rounded-md
+      bg-blue-600
+      p-3
+      px-6
+      m-0
+      text-2xl
+      font-semibold
+      text-white
+      shadow-sm
+      sm:ml-3
+      sm:w-auto
+      focus:ring-opacity-50
+      active:bg-blue-800;
+  }
+  
+  .generate-button svg,
+  button.insert-button svg {
+    @apply
+      text-2xl
+  }
+  
+  .regenerate-buttons-wrapper {
+    @apply
+      gap-2.5
+      flex
+      items-center
+      justify-center;
+  }
+  
+  .regenerate-buttons-wrapper button.insert-button {
+    @apply
+      border-gray-500
+      border
+      rounded-md
+      text-2xl
+      font-semibold
+      text-gray-500
+      gap-2.5
+      flex
+      justify-center
+      items-center
+      p-3
+      px-6
+      focus:ring-opacity-50;
+  }
+  
+  .regenerate-button {
+    @apply
+      inline-flex
+      w-full
+      justify-center
+      items-center
+      gap-2.5
+      rounded-md
+      bg-blue-600
+      p-3
+      px-6
+      m-0
+      text-2xl
+      font-semibold
+      text-white
+      shadow-sm
+      sm:ml-3
+      sm:w-auto
+      focus:ring-opacity-50
+      active:bg-blue-800;
+  }
+  
+  .sparkles-icon svg,
+  .insert-button svg,
+  .regenerate-button svg {
+    @apply
+      w-6
+      h-6;
+  }
+  
+  .stars-icon svg {
+    @apply
+      w-7
+      h-7;
+  }
+  
+  .generate-button svg {
+    @apply
+      w-8
+      h-8;
+  }
+  
+  .sparkles-icon svg path,
+  .stars-icon svg path {
+    @apply
+      fill-blue-600;
+  }
+  
+  .insert-button svg path {
+    @apply
+      fill-gray-500;
+  }
