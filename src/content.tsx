@@ -1,106 +1,95 @@
-import cssText from "data-text:~style.css";
-import type { PlasmoCSConfig } from "plasmo";
-import { useCallback, useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import cssText from "data-text:~style.css"
+import type { PlasmoCSConfig } from "plasmo"
+import { useEffect } from "react"
+import ReactDOM from "react-dom"
+import ChatIcon from "~features/ChatIcon"
 
-import { CountButton } from "~features/CountButton";
-
-const OBSERVER_CONFIG = {
-  childList: true,
-  attributes: true,
-  subtree: true,
-  attributeFilter: ["data-artdeco-is-focused"]
-};
 
 export const config: PlasmoCSConfig = {
   matches: ["https://*.linkedin.com/*"]
-};
+}
 
 export const getStyle = () => {
-  const style = document.createElement("style");
-  style.textContent = cssText;
-  return style;
-};
+  const style = document.createElement("style")
+  style.textContent = cssText
+  return style
+}
 
 const PlasmoOverlay = () => {
-  const [mutationObserver, setMutationObserver] = useState<MutationObserver | null>(null);
 
-  const addButton = useCallback((parentNode: HTMLElement) => {
-    if (!parentNode.querySelector("#count-btn")) {
-      const btnContainer = document.createElement("div");
-      btnContainer.id = "count-btn";
-      btnContainer.style.cssText = `position:absolute; bottom:12%; right:12%; z-index:1000;`;
-      parentNode.append(btnContainer);
-      ReactDOM.render(<CountButton />, btnContainer);
+  const appendIcon = (textBox: HTMLElement) => {
+    
+    if (textBox) {
+      // Create the ChatIcon container
+      textBox.style.position = "relative";
+      let iconContainer = textBox.querySelector("#plasmo-chat-icon") as HTMLElement;
+      if (!iconContainer) {
+        const chatIconContainer = document.createElement("div");
+        chatIconContainer.id = "plasmo-chat-icon";
+
+        textBox.appendChild(chatIconContainer);
+
+        // Render ChatIcon component in chatIconContainer Element
+        if (chatIconContainer) {
+          ReactDOM.render(<ChatIcon />, chatIconContainer);
+        }
+      }
     }
-  }, []);
+  }
 
-  const removeButton = useCallback((parentNode: HTMLElement) => {
-    const btnContainer = parentNode.querySelector("#count-btn");
-    if (btnContainer) {
-      ReactDOM.unmountComponentAtNode(btnContainer);
-      btnContainer.remove();
+  const handleBlur = (event: React.FocusEvent<HTMLElement>) => {
+    //on blur and when modal is not opened, remove the icon from message container 
+    const chatInput = event.target;
+    const isModalOpen = !!document.querySelector('.popup-open');
+    if (!isModalOpen) {
+      let icon = chatInput.querySelector("#plasmo-chat-icon") as HTMLElement;
+      if(icon) {
+        icon.remove();
+        icon = null;
+      }
     }
-  }, []);
+  }
 
-  const handleMutations = useCallback(
-    (mutations: MutationRecord[]) => {
+  const handleFocus = (event: React.FocusEvent<HTMLElement>) => {
+    console.log("on handle focus", event);
+    //on focus of linked in chat message container, append the icon
+    const chatInput = event.target as HTMLElement;
+    appendIcon(chatInput);
+  }
+
+
+  useEffect(() => {
+    //Setting mutation observer to watch changes on dom for opening chat input
+    const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (
-          mutation.type === "attributes" &&
-          mutation.attributeName === "data-artdeco-is-focused"
-        ) {
-          const target = mutation.target as HTMLElement;
-          const form = target.closest("form[id^='msg-form-ember']");
-          if (form) {
-            const contentEditableDiv = form.querySelector<HTMLElement>(
-              "div.msg-form__msg-content-container"
-            );
-            if (contentEditableDiv) {
-              if (target.getAttribute("data-artdeco-is-focused") === "true") {
-                addButton(contentEditableDiv);
-              } else {
-                setTimeout(() => removeButton(contentEditableDiv), 500);
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            const element = node as Element
+            const chatInput = element.querySelector(".msg-form__contenteditable") as HTMLElement;//get the element of linkedin chat message container
+            //if chat input is found, add focus and blur event listeners
+            if (chatInput) {
+              chatInput.addEventListener("focus", handleFocus as () => void);
+              chatInput.addEventListener("blur", handleBlur as () => void);
+              //To handle display of icon when new chat is opened
+              if (chatInput === document.activeElement) {
+                handleFocus({ target: chatInput } as React.FocusEvent<HTMLElement>);
               }
             }
           }
-        }
-      });
-    },
-    [addButton, removeButton]
-  );
-
-  const setupObserver = useCallback(() => {
-    const msgOverlay = document.getElementById("msg-overlay");
-    if (msgOverlay) {
-      const observer = new MutationObserver(handleMutations);
-      observer.observe(msgOverlay, OBSERVER_CONFIG);
-      setMutationObserver(observer);
-    } else {
-      console.error("msg-overlay not found, try reloading the page");
-    }
-  }, [handleMutations]);
-
-  useEffect(() => {
-    const handleLoad = () => {
-      setTimeout(setupObserver, 2000);
-    };
-
-    if (document.readyState !== "complete") {
-      window.addEventListener("load", handleLoad);
-    } else {
-      handleLoad();
-    }
-
+        })
+      })
+    })
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    })
     return () => {
-      window.removeEventListener("load", handleLoad);
-      if (mutationObserver) {
-        mutationObserver.disconnect();
-      }
-    };
-  }, [setupObserver, mutationObserver]);
+      observer.disconnect()
+    }
+  }, []);
+
 
   return null;
-};
+}
 
-export default PlasmoOverlay;
+export default PlasmoOverlay
